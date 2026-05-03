@@ -2,7 +2,6 @@ package entities;
 
 import entities.enums.AlertSeverity;
 import entities.enums.LivestockType;
-import entities.enums.ZoneType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,7 +57,7 @@ public class Farm {
     }
 
     public AquacultureZone CreateAquacultureZone(String zoneName) {
-        AquacultureZone zone = new AquacultureZone(nextCode("AZ", ++aquacultureZoneCounter), zoneName, ZoneType.AQUACULTURE);
+        AquacultureZone zone = new AquacultureZone(nextCode("AZ", ++aquacultureZoneCounter), zoneName);
         zones.add(zone);
         return zone;
     }
