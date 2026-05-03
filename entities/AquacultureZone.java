@@ -27,6 +27,12 @@ public class AquacultureZone extends Zone {
         species.add(s);
     }
 
+    public WaterSensor createWaterSensor(String sensorCode, double minThreshold, double maxThreshold) {
+        WaterSensor sensor = new WaterSensor(sensorCode, getCode(), minThreshold, maxThreshold);
+        addSensor(sensor);
+        return sensor;
+    }
+
     public void removeSpecies(AquacultureSpecies s) {
         species.remove(s);
     }

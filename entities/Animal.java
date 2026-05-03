@@ -16,6 +16,10 @@ public class Animal {
     private HealthStatus healthStatus;
     private final List<HealthEvent> healthHistory;
 
+    public Animal(String id) {
+        this(id, "Unknown", 0, 0.0);
+    }
+
     public Animal(String id, String species, int ageMonths, double weightKg) {
         this.id = id;
         this.species = species;
@@ -38,6 +42,16 @@ public class Animal {
 
     public void logHealthEvent(HealthEvent event) {
         healthHistory.add(event);
+    }
+
+    public void addHealthEvent(HealthEvent event) {
+        logHealthEvent(event);
+    }
+
+    public HealthEvent addHealthEvent(String description) {
+        HealthEvent event = new HealthEvent(description, weightKg);
+        addHealthEvent(event);
+        return event;
     }
 
     @Override

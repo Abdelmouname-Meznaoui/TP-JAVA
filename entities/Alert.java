@@ -20,6 +20,17 @@ public class Alert {
     private final LocalDateTime triggeredAt;
     private String message;
 
+    public Alert(double triggeringValue, double thresholdValue) {
+        this(
+                "UNKNOWN",
+                "UNKNOWN",
+                triggeringValue,
+                "",
+                Math.abs(triggeringValue - thresholdValue) > 10.0 ? AlertSeverity.CRITICAL : AlertSeverity.WARNING,
+                String.format("Threshold exceeded: value %.2f, expected %.2f", triggeringValue, thresholdValue)
+        );
+    }
+
     public Alert(String sensorCode, String zoneCode, double triggeringValue,
                  String unit, AlertSeverity severity, String message) {
         this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();

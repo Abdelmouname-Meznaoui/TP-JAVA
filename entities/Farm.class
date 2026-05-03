@@ -1,0 +1,89 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+package entities;
+
+import entities.enums.AlertSeverity;
+import entities.enums.LivestockType;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Farm {
+   private final String name;
+   private final List<Zone> zones;
+   private final List<Alert> alerts;
+   private int cropZoneCounter;
+   private int livestockZoneCounter;
+   private int aquacultureZoneCounter;
+
+   public Farm(String var1) {
+      this.name = var1;
+      this.zones = new ArrayList();
+      this.alerts = new ArrayList();
+   }
+
+   public String getName() {
+      return this.name;
+   }
+
+   public List<Zone> getZones() {
+      return Collections.unmodifiableList(this.zones);
+   }
+
+   public List<Alert> getAlerts() {
+      return Collections.unmodifiableList(this.alerts);
+   }
+
+   public CropZone createCropZone(String var1) {
+      CropZone var2 = new CropZone(this.nextCode("CZ", ++this.cropZoneCounter), var1);
+      this.zones.add(var2);
+      return var2;
+   }
+
+   public CropZone CreateCropZone() {
+      return this.createCropZone("Crop Zone " + (this.cropZoneCounter + 1));
+   }
+
+   public LivestockZone createLivestockZone(String var1) {
+      return this.createLivestockZone(var1, LivestockType.RUMINANT);
+   }
+
+   public LivestockZone createLivestockZone(String var1, LivestockType var2) {
+      LivestockZone var3 = new LivestockZone(this.nextCode("LZ", ++this.livestockZoneCounter), var1, var2);
+      this.zones.add(var3);
+      return var3;
+   }
+
+   public LivestockZone CreateLiveStockZone() {
+      return this.createLivestockZone("Livestock Zone " + (this.livestockZoneCounter + 1));
+   }
+
+   public AquacultureZone createAquacultureZone(String var1) {
+      AquacultureZone var2 = new AquacultureZone(this.nextCode("AZ", ++this.aquacultureZoneCounter), var1);
+      this.zones.add(var2);
+      return var2;
+   }
+
+   public AquacultureZone AquaCultureZone() {
+      return this.createAquacultureZone("Aquaculture Zone " + (this.aquacultureZoneCounter + 1));
+   }
+
+   public Alert createAlert(String var1, String var2, double var3, String var5, AlertSeverity var6, String var7) {
+      Alert var8 = new Alert(var1, var2, var3, var5, var6, var7);
+      this.alerts.add(var8);
+      return var8;
+   }
+
+   public Alert createAlert(double var1, double var3) {
+      AlertSeverity var5 = Math.abs(var1 - var3) > (double)10.0F ? AlertSeverity.CRITICAL : AlertSeverity.WARNING;
+      String var6 = String.format("Threshold exceeded: value %.2f, expected %.2f", var1, var3);
+      return this.createAlert("UNKNOWN", "UNKNOWN", var1, "", var5, var6);
+   }
+
+   public Alert CreateAlert() {
+      return this.createAlert((double)0.0F, (double)0.0F);
+   }
+
+   private String nextCode(String var1, int var2) {
+      return String.format("%s%03d", var1, var2);
+   }
+}

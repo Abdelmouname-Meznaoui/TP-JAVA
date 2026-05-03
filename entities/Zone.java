@@ -11,7 +11,7 @@ import java.util.List;
  * A zone is identified by a unique code and a name,
  * and can be active or suspended.
  */
-public abstract class Zone {
+public abstract class Zone implements Suspendable {
     private final String code;
     private String name;
     private ZoneStatus status;
@@ -40,6 +40,7 @@ public abstract class Zone {
     /**
      * Suspends this zone and all its sensors.
      */
+    @Override
     public void suspend() {
         this.status = ZoneStatus.SUSPENDED;
         for (Sensor sensor : sensors) {
@@ -50,6 +51,7 @@ public abstract class Zone {
     /**
      * Reactivates the zone and all its sensors.
      */
+    @Override
     public void reactivate() {
         this.status = ZoneStatus.ACTIVE;
         for (Sensor sensor : sensors) {
@@ -75,4 +77,6 @@ public abstract class Zone {
     public String toString() {
         return "[" + code + "] " + name + " (" + type + ") - " + status;
     }
+
+    
 }

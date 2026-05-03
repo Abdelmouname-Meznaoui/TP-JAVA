@@ -20,6 +20,11 @@ public class Crop {
     private double optimalMoistureMin;
     private double optimalMoistureMax;
 
+    public Crop(String id, String name) {
+        this(id, name, CropFamily.CEREAL, LocalDate.now(), LocalDate.now().plusMonths(4),
+                6.0, 7.5, 40.0, 60.0);
+    }
+
     public Crop(String id, String name, CropFamily family,
                 LocalDate plantingDate, LocalDate expectedHarvestDate,
                 double optimalPhMin, double optimalPhMax,

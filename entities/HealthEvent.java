@@ -10,6 +10,10 @@ public class HealthEvent {
     private final LocalDateTime timestamp;
     private final double weightAtEvent;
 
+    public HealthEvent(String description) {
+        this(description, 0.0);
+    }
+
     public HealthEvent(String description, double weightAtEvent) {
         this.description = description;
         this.weightAtEvent = weightAtEvent;

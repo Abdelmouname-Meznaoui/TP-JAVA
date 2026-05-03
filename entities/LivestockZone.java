@@ -31,6 +31,12 @@ public class LivestockZone extends Zone {
         animals.add(animal);
     }
 
+    public Animal createAnimal(String animalId) {
+        Animal animal = new Animal(animalId);
+        addAnimal(animal);
+        return animal;
+    }
+
     public void removeAnimal(Animal animal) {
         animals.remove(animal);
     }

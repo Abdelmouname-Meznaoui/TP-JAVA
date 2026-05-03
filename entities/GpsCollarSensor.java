@@ -1,5 +1,7 @@
 package entities;
 
+import entities.enums.MeasurementType;
+
 public class GpsCollarSensor extends Sensor {
     private final String animalId;
 
@@ -12,7 +14,7 @@ public class GpsCollarSensor extends Sensor {
     public GpsCollarSensor(String code, String zoneCode, String animalId,
                             double latMin, double latMax, double lonMin, double lonMax) {
 
-        super(code, zoneCode, latMin, latMax);
+        super(code, zoneCode);
         this.animalId = animalId;
         this.boundaryLatMin = latMin;
         this.boundaryLatMax = latMax;
@@ -27,6 +29,7 @@ public class GpsCollarSensor extends Sensor {
     public void updatePosition(double lat, double lon) {
         this.lastLatitude = lat;
         this.lastLongitude = lon;
+        addReading(new GPSReading(getCode(), lat, lon));
     }
 
     public boolean isOutOfBounds(double lat, double lon) {
@@ -39,6 +42,7 @@ public class GpsCollarSensor extends Sensor {
         return false;
     }
 
+    @Override public MeasurementType getMeasurementType() { return MeasurementType.BIOMETRIC; }
     @Override public String getType() { return "GPS Collar"; }
     @Override public String getUnit() { return "coordinates"; }
 }
