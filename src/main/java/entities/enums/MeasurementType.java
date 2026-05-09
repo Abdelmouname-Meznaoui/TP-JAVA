@@ -1,12 +1,14 @@
 package entities.enums;
 
+import javafx.scene.paint.RadialGradient;
+
 public enum MeasurementType {
     TEMPERATURE,
     HUMIDITY,
-    PH,
     MOISTURE,
+    BIOMETRIC,
+    ENVIRONMENTAL,
+    PH,
     NITROGEN,
-    DISSOLVED_OXYGEN,
     RAINFALL,
-    BIOMETRIC
 }

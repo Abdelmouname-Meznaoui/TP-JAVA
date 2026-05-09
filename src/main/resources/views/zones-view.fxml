@@ -4,17 +4,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="18.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controllers.ZonesController" styleClass="page-shell">
-    <children>
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.ZonesController" styleClass="page-scroll">
+    <content>
+        <VBox spacing="18.0" styleClass="page-shell">
+            <children>
         <HBox spacing="18.0">
             <children>
                 <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
@@ -23,7 +27,10 @@
                     </padding>
                     <children>
                         <Label text="Zone Registry" styleClass="panel-title" />
-                        <TableView fx:id="zonesTable" columnResizePolicy="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                        <TableView fx:id="zonesTable" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS" />
+                            </columnResizePolicy>
                             <columns>
                                 <TableColumn fx:id="codeColumn" prefWidth="90.0" text="Code" />
                                 <TableColumn fx:id="nameColumn" prefWidth="180.0" text="Name" />
@@ -48,9 +55,151 @@
                         <Label fx:id="validationLabel" text="Ready to add a new operational zone." wrapText="true" styleClass="helper-text" />
                         <Region VBox.vgrow="ALWAYS" />
                         <Button mnemonicParsing="false" onAction="#createZone" styleClass="primary-button" text="Create Zone" />
+                        <HBox spacing="8.0">
+                            <children>
+                                <Button fx:id="toggleZoneButton" mnemonicParsing="false" onAction="#toggleSelectedZoneStatus" text="Disable/Enable Selected" />
+                                <TextField fx:id="productionField" promptText="Production value" />
+                                <Button mnemonicParsing="false" onAction="#recordProduction" text="Record Production" />
+                            </children>
+                        </HBox>
+                        <HBox spacing="8.0">
+                            <children>
+                                <TextField fx:id="assignEntityField" promptText="Entity id or name" />
+                                <Button mnemonicParsing="false" onAction="#assignEntityToSelectedZone" text="Assign Entity" />
+                            </children>
+                        </HBox>
                     </children>
                 </VBox>
             </children>
         </HBox>
-    </children>
-</VBox>
+        <HBox spacing="18.0">
+            <children>
+                <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                    </padding>
+                    <children>
+                        <Label text="Crop Management" styleClass="panel-title" />
+                        <Label text="Registered crops and growth tracking" styleClass="section-subtitle" />
+                        <TableView fx:id="cropsTable" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                            <columns>
+                                <TableColumn fx:id="cropIdColumn" prefWidth="80.0" text="ID" />
+                                <TableColumn fx:id="cropNameColumn" prefWidth="100.0" text="Name" />
+                                <TableColumn fx:id="cropFamilyColumn" prefWidth="80.0" text="Family" />
+                                <TableColumn fx:id="cropStageColumn" prefWidth="100.0" text="Growth Stage" />
+                                <TableColumn fx:id="cropPlantingColumn" prefWidth="100.0" text="Planted" />
+                                <TableColumn fx:id="cropZoneColumn" prefWidth="100.0" text="Zone" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+                <VBox prefWidth="280.0" spacing="14.0" styleClass="card panel-card form-card">
+                    <children>
+                        <Label text="Crop Operations" styleClass="panel-title" />
+                        <Label text="Update crop growth or view detailed report." styleClass="section-subtitle" wrapText="true" />
+                        <Label text="Growth Stage" styleClass="input-label" />
+                        <ComboBox fx:id="growthStageCombo" maxWidth="1.7976931348623157E308" styleClass="text-input" />
+                        <Button mnemonicParsing="false" onAction="#updateSelectedCropGrowthStage" styleClass="primary-button" text="Update Stage" />
+                        <Separator prefWidth="200.0" />
+                        <Button mnemonicParsing="false" onAction="#showCropReport" styleClass="secondary-button" text="View Crop Report" />
+                        <Label fx:id="cropValidationLabel" text="Select a crop to manage." wrapText="true" styleClass="helper-text" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox spacing="18.0">
+            <children>
+                <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                    </padding>
+                    <children>
+                        <Label text="Animal Registry" styleClass="panel-title" />
+                        <TableView fx:id="animalsTable" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                            <columns>
+                                <TableColumn fx:id="animalIdColumn" prefWidth="80.0" text="ID" />
+                                <TableColumn fx:id="animalSpeciesColumn" prefWidth="120.0" text="Species" />
+                                <TableColumn fx:id="animalAgeColumn" prefWidth="80.0" text="Age" />
+                                <TableColumn fx:id="animalWeightColumn" prefWidth="90.0" text="Weight" />
+                                <TableColumn fx:id="animalHealthColumn" prefWidth="100.0" text="Health" />
+                                <TableColumn fx:id="animalZoneColumn" prefWidth="120.0" text="Zone" />
+                                <TableColumn fx:id="animalEventsColumn" prefWidth="80.0" text="Events" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+                <VBox prefWidth="320.0" spacing="14.0" styleClass="card panel-card form-card">
+                    <children>
+                        <Label text="Add Animal" styleClass="panel-title" />
+                        <Label text="Use the selected livestock zone." styleClass="section-subtitle" wrapText="true" />
+                        <Label text="Species" styleClass="input-label" />
+                        <TextField fx:id="animalSpeciesField" promptText="Ex: Cow" styleClass="text-input" />
+                        <Label text="Age (months)" styleClass="input-label" />
+                        <TextField fx:id="animalAgeField" promptText="Ex: 18" styleClass="text-input" />
+                        <Label text="Weight (kg)" styleClass="input-label" />
+                        <TextField fx:id="animalWeightField" promptText="Ex: 420.5" styleClass="text-input" />
+                        <Label text="Health status" styleClass="input-label" />
+                        <ComboBox fx:id="animalHealthStatusCombo" maxWidth="1.7976931348623157E308" styleClass="text-input" />
+                        <Button mnemonicParsing="false" onAction="#registerAnimal" styleClass="primary-button" text="Register Animal" />
+                        <Label fx:id="animalValidationLabel" text="Select a livestock zone first." wrapText="true" styleClass="helper-text" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox spacing="18.0">
+            <children>
+                <VBox prefWidth="320.0" spacing="14.0" styleClass="card panel-card form-card">
+                    <children>
+                        <Label text="Animal Events" styleClass="panel-title" />
+                        <Label text="Select an animal from the table." styleClass="section-subtitle" wrapText="true" />
+                        <Label text="Illness description" styleClass="input-label" />
+                        <TextField fx:id="illnessField" promptText="Ex: Fever observed" styleClass="text-input" />
+                        <Button mnemonicParsing="false" onAction="#recordAnimalIllness" text="Record Illness" />
+                        <Label text="New weight (kg)" styleClass="input-label" />
+                        <TextField fx:id="weightChangeField" promptText="Ex: 445.0" styleClass="text-input" />
+                        <Button mnemonicParsing="false" onAction="#recordAnimalWeightChange" text="Record Weight Change" />
+                        <Separator prefWidth="200.0" />
+                        <Button mnemonicParsing="false" onAction="#showAnimalReport" styleClass="secondary-button" text="View Animal Report" />
+                    </children>
+                </VBox>
+                <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                    </padding>
+                    <children>
+                        <Label text="Feeding Programmes" styleClass="panel-title" />
+                        <TableView fx:id="feedingTable" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                            <columns>
+                                <TableColumn fx:id="feedingZoneColumn" prefWidth="120.0" text="Zone" />
+                                <TableColumn fx:id="feedingTypeColumn" prefWidth="100.0" text="Type" />
+                                <TableColumn fx:id="feedingFeedColumn" prefWidth="100.0" text="Feed" />
+                                <TableColumn fx:id="feedingQuantityColumn" prefWidth="100.0" text="Qty/meal" />
+                                <TableColumn fx:id="feedingMealsColumn" prefWidth="90.0" text="Meals/day" />
+                                <TableColumn fx:id="feedingNotesColumn" prefWidth="180.0" text="Notes" />
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+                <VBox prefWidth="320.0" spacing="14.0" styleClass="card panel-card form-card">
+                    <children>
+                        <Label text="Set Feeding Programme" styleClass="panel-title" />
+                        <Label text="Use the selected livestock or aquaculture zone." styleClass="section-subtitle" wrapText="true" />
+                        <Label text="Feed type" styleClass="input-label" />
+                        <TextField fx:id="feedTypeField" promptText="Ex: Pellet mix" styleClass="text-input" />
+                        <Label text="Quantity / meal (kg)" styleClass="input-label" />
+                        <TextField fx:id="feedQuantityField" promptText="Ex: 2.5" styleClass="text-input" />
+                        <Label text="Meals / day" styleClass="input-label" />
+                        <TextField fx:id="feedMealsField" promptText="Ex: 3" styleClass="text-input" />
+                        <Label text="Notes" styleClass="input-label" />
+                        <TextField fx:id="feedNotesField" promptText="Optional notes" styleClass="text-input" />
+                        <Button mnemonicParsing="false" onAction="#setFeedingProgramme" styleClass="primary-button" text="Save Programme" />
+                        <Button mnemonicParsing="false" onAction="#showFeedingReport" styleClass="secondary-button" text="View Feeding Report" />
+                        <Label fx:id="feedingValidationLabel" text="Define a programme for the selected zone." wrapText="true" styleClass="helper-text" />
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

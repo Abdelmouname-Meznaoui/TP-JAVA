@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import entities.enums.MeasurementType;
 
 /**
  * Crop zone hosts crop fields and is equipped with
@@ -43,8 +44,8 @@ public class CropZone extends Zone {
     public EnvironmentalSensor createEnvironmentalSensor(String sensorCode, double minThreshold, double maxThreshold) {
         String normalizedName = getName().toLowerCase(Locale.ROOT);
         EnvironmentalSensor sensor = normalizedName.contains("humid")
-                ? new HumiditySensor(sensorCode, getCode(), minThreshold, maxThreshold)
-                : new PhSensor(sensorCode, getCode(), minThreshold, maxThreshold);
+                ? new EnvironmentalSensor(sensorCode, getCode(), minThreshold, maxThreshold, MeasurementType.HUMIDITY)
+                : new EnvironmentalSensor(sensorCode, getCode(), minThreshold, maxThreshold, MeasurementType.TEMPERATURE);
         addSensor(sensor);
         return sensor;
     }

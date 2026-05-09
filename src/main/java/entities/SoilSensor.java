@@ -2,8 +2,7 @@ package entities;
 
 import entities.enums.MeasurementType;
 
-public class SoilSensor extends EnvironmentalSensor {
-
+public class SoilSensor extends NumericSensor {
     public SoilSensor(String code, String zoneCode, double minThreshold, double maxThreshold) {
         super(code, zoneCode, minThreshold, maxThreshold);
     }

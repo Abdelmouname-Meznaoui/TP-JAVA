@@ -16,7 +16,10 @@
             <children>
                 <Label text="Alert Center" styleClass="panel-title" />
                 <Label text="A clean list of recent sensor exceptions with severity and timing." styleClass="section-subtitle" wrapText="true" />
-                <TableView fx:id="alertsTable" columnResizePolicy="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                <TableView fx:id="alertsTable" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS" />
+                    </columnResizePolicy>
                     <columns>
                         <TableColumn fx:id="idColumn" prefWidth="90.0" text="ID" />
                         <TableColumn fx:id="severityColumn" prefWidth="110.0" text="Severity" />

@@ -38,13 +38,16 @@ public class Farm {
         return zone;
     }
 
-    public CropZone CreateCropZone() {
+   /* public CropZone CreateCropZone() {
         return createCropZone("Crop Zone " + (cropZoneCounter + 1));
-    }
+    }*/
 
-    public LivestockZone createLivestockZone(String zoneName) {
+    /*public LivestockZone createLivestockZone(String zoneName) {
         return createLivestockZone(zoneName, LivestockType.RUMINANT);
     }
+    public LivestockZone CreateLiveStockZone() {
+        return createLivestockZone("Livestock Zone " + (livestockZoneCounter + 1));
+    }*/
 
     public LivestockZone createLivestockZone(String zoneName, LivestockType livestockType) {
         LivestockZone zone = new LivestockZone(nextCode("LZ", ++livestockZoneCounter), zoneName, livestockType);
@@ -52,9 +55,6 @@ public class Farm {
         return zone;
     }
 
-    public LivestockZone CreateLiveStockZone() {
-        return createLivestockZone("Livestock Zone " + (livestockZoneCounter + 1));
-    }
 
     public AquacultureZone createAquacultureZone(String zoneName) {
         AquacultureZone zone = new AquacultureZone(nextCode("AZ", ++aquacultureZoneCounter), zoneName);
@@ -62,7 +62,7 @@ public class Farm {
         return zone;
     }
 
-    public AquacultureZone createAquacultureZone() {
+    /*public AquacultureZone createAquacultureZone() {
         return createAquacultureZone("Aquaculture Zone " + (aquacultureZoneCounter + 1));
     }
 
@@ -72,7 +72,7 @@ public class Farm {
 
     public Zone AquaCultureZone() {
         return createAquacultureZone();
-    }
+    }*/
 
     public Alert createAlert(String sensorCode, String zoneCode, double triggeringValue,
                              String unit, AlertSeverity severity, String message) {
