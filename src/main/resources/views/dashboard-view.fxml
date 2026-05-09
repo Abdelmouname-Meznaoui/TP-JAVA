@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="page-scroll"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.DashboardController">
+    <content>
+        <VBox spacing="22.0" styleClass="page-shell">
+            <padding>
+                <Insets bottom="6.0" left="4.0" right="4.0" top="4.0" />
+            </padding>
+            <children>
+                <VBox spacing="6.0">
+                    <children>
+                        <Label text="Overview" styleClass="section-title" />
+                        <Label fx:id="farmNameLabel" text="Farm name" styleClass="section-subtitle" />
+                    </children>
+                </VBox>
+                <FlowPane hgap="18.0" vgap="18.0" prefWrapLength="1200.0">
+                    <children>
+                        <HBox fx:id="zonesCard" prefWidth="260.0" styleClass="card stat-card">
+                            <children>
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Total Zones" styleClass="stat-title" />
+                                        <Label fx:id="totalZonesLabel" text="0" styleClass="stat-value" />
+                                        <Label text="Operational areas configured across the farm" styleClass="stat-caption" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox fx:id="sensorsCard" prefWidth="260.0" styleClass="card stat-card">
+                            <children>
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Sensors" styleClass="stat-title" />
+                                        <Label fx:id="totalSensorsLabel" text="0" styleClass="stat-value" />
+                                        <Label text="Live monitoring points feeding daily operations" styleClass="stat-caption" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox fx:id="alertsCard" prefWidth="260.0" styleClass="card stat-card accent-card">
+                            <children>
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Active Alerts" styleClass="stat-title" />
+                                        <Label fx:id="activeAlertsLabel" text="0" styleClass="stat-value" />
+                                        <Label text="Items needing attention from the operations team" styleClass="stat-caption" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <HBox fx:id="entitiesCard" prefWidth="260.0" styleClass="card stat-card">
+                            <children>
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label text="Tracked Entities" styleClass="stat-title" />
+                                        <Label fx:id="totalEntitiesLabel" text="0" styleClass="stat-value" />
+                                        <Label text="Crops, animals, and aquatic groups in the system" styleClass="stat-caption" wrapText="true" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </FlowPane>
+                <HBox spacing="18.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Zone Highlights" styleClass="panel-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label text="Top 3" styleClass="panel-pill" />
+                                    </children>
+                                </HBox>
+                                <VBox fx:id="zoneHighlightsBox" spacing="12.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="14.0" styleClass="card panel-card" HBox.hgrow="ALWAYS">
+                            <children>
+                                <HBox alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Alert Feed" styleClass="panel-title" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label text="Latest" styleClass="panel-pill" />
+                                    </children>
+                                </HBox>
+                                <VBox fx:id="alertHighlightsBox" spacing="12.0" VBox.vgrow="ALWAYS" />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </content>
+</ScrollPane>

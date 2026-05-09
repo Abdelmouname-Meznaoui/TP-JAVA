@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="16.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.AlertsController" styleClass="page-shell">
+    <children>
+        <VBox spacing="14.0" styleClass="card panel-card" VBox.vgrow="ALWAYS">
+            <padding>
+                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+            </padding>
+            <children>
+                <Label text="Alert Center" styleClass="panel-title" />
+                <Label text="A clean list of recent sensor exceptions with severity and timing." styleClass="section-subtitle" wrapText="true" />
+                <TableView fx:id="alertsTable" columnResizePolicy="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS" VBox.vgrow="ALWAYS" styleClass="glass-table">
+                    <columns>
+                        <TableColumn fx:id="idColumn" prefWidth="90.0" text="ID" />
+                        <TableColumn fx:id="severityColumn" prefWidth="110.0" text="Severity" />
+                        <TableColumn fx:id="zoneColumn" prefWidth="100.0" text="Zone" />
+                        <TableColumn fx:id="sensorColumn" prefWidth="110.0" text="Sensor" />
+                        <TableColumn fx:id="statusColumn" prefWidth="120.0" text="Status" />
+                        <TableColumn fx:id="timeColumn" prefWidth="140.0" text="Time" />
+                        <TableColumn fx:id="messageColumn" prefWidth="420.0" text="Message" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </children>
+</VBox>
