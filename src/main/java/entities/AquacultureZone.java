@@ -28,6 +28,12 @@ public class AquacultureZone extends Zone {
         species.add(s);
     }
 
+    public AquacultureSpecies createSpecies(String speciesId) {
+        AquacultureSpecies aquacultureSpecies = new AquacultureSpecies(speciesId, "Unknown", 0, 0.0);
+        addSpecies(aquacultureSpecies);
+        return aquacultureSpecies;
+    }
+
     public WaterSensor createWaterSensor(String sensorCode, double minThreshold, double maxThreshold) {
         WaterSensor sensor = new WaterSensor(sensorCode, getCode(), minThreshold, maxThreshold);
         addSensor(sensor);
