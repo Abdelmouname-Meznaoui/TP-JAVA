@@ -29,6 +29,8 @@
                                 onAction="#showDashboard" styleClass="sidebar-button" text="Dashboard" />
                         <Button fx:id="zonesButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
                                 onAction="#showZones" styleClass="sidebar-button" text="Zones" />
+                        <Button fx:id="sensorsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                onAction="#showSensors" styleClass="sidebar-button" text="Sensors" />
                         <Button fx:id="alertsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
                                 onAction="#showAlerts" styleClass="sidebar-button" text="Alerts" />
                         <Region VBox.vgrow="ALWAYS" />

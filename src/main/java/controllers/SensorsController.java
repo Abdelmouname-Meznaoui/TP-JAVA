@@ -38,6 +38,19 @@ public class SensorsController implements PageController {
     @FXML private Button viewHistoryButton;
     @FXML private Label selectedSensorLabel;
 
+    @FXML private ComboBox<String> createZoneCombo;
+    @FXML private ComboBox<String> createSensorTypeCombo;
+    @FXML private TextField createSensorCodeField;
+    @FXML private TextField createMinThresholdField;
+    @FXML private TextField createMaxThresholdField;
+    @FXML private TextField createAnimalIdField;
+    @FXML private TextField createLatMinField;
+    @FXML private TextField createLatMaxField;
+    @FXML private TextField createLonMinField;
+    @FXML private TextField createLonMaxField;
+    @FXML private Button createSensorButton;
+    @FXML private Label sensorCreateValidationLabel;
+
     private FarmDataService farmDataService;
     private String selectedSensorCode;
 
@@ -47,6 +60,7 @@ public class SensorsController implements PageController {
         setupSensorTable();
         setupHistoryTable();
         setupFilters();
+        setupSensorCreation();
     }
 
     private void setupSensorTable() {
@@ -130,11 +144,18 @@ public class SensorsController implements PageController {
         zoneFilter.setValue("All");
         
         // Setup sensor type filter
-        sensorTypeFilter.setItems(FXCollections.observableArrayList("All", "SoilSensor", "WaterSensor", "BiometricSensor", "GpsCollarSensor"));
+        sensorTypeFilter.setItems(FXCollections.observableArrayList(
+                "All",
+                "Soil Moisture",
+                "Environmental",
+                "Water pH",
+                "Biometric (Body Temp)",
+                "GPS Collar"
+        ));
         sensorTypeFilter.setValue("All");
         
         // Setup status filter
-        statusFilter.setItems(FXCollections.observableArrayList("All", "ACTIVE", "FAILING", "SUSPENDED"));
+        statusFilter.setItems(FXCollections.observableArrayList("All", "ACTIVE", "FAULTY", "SUSPENDED"));
         statusFilter.setValue("All");
         
         // Setup date pickers
@@ -152,6 +173,102 @@ public class SensorsController implements PageController {
                 showAlert("No Sensor Selected", "Please select a sensor to view its history.");
             }
         });
+        createSensorButton.setOnAction(event -> handleCreateSensor());
+    }
+
+    private void setupSensorCreation() {
+        populateCreateZoneOptions();
+        createSensorTypeCombo.setItems(FXCollections.observableArrayList(
+                "SoilSensor",
+                "EnvironmentalSensor",
+                "WaterSensor",
+                "BiometricSensor",
+                "GpsCollarSensor"
+        ));
+        createSensorTypeCombo.setValue("SoilSensor");
+        createAnimalIdField.setPromptText("Optional for GPS/Biometric");
+        sensorCreateValidationLabel.setText("");
+    }
+
+    private void populateCreateZoneOptions() {
+        List<String> zones = farmDataService.getZoneSummaries().stream()
+                .map(z -> z.code() + " - " + z.name())
+                .toList();
+        createZoneCombo.setItems(FXCollections.observableArrayList(zones));
+        if (!zones.isEmpty()) {
+            createZoneCombo.setValue(zones.get(0));
+        }
+    }
+
+    private void handleCreateSensor() {
+        String zoneValue = createZoneCombo.getValue();
+        String sensorType = createSensorTypeCombo.getValue();
+        String sensorCode = createSensorCodeField.getText();
+        String minValue = createMinThresholdField.getText();
+        String maxValue = createMaxThresholdField.getText();
+        String animalId = createAnimalIdField.getText();
+        String latMinValue = createLatMinField.getText();
+        String latMaxValue = createLatMaxField.getText();
+        String lonMinValue = createLonMinField.getText();
+        String lonMaxValue = createLonMaxField.getText();
+
+        if (zoneValue == null || zoneValue.isBlank() || sensorCode == null || sensorCode.isBlank()) {
+            showCreateValidation("Zone and sensor code are required.");
+            return;
+        }
+
+        try {
+            double minThreshold = Double.parseDouble(minValue);
+            double maxThreshold = Double.parseDouble(maxValue);
+
+            Double latMin = null;
+            Double latMax = null;
+            Double lonMin = null;
+            Double lonMax = null;
+            if ("GpsCollarSensor".equals(sensorType)) {
+                latMin = Double.parseDouble(latMinValue);
+                latMax = Double.parseDouble(latMaxValue);
+                lonMin = Double.parseDouble(lonMinValue);
+                lonMax = Double.parseDouble(lonMaxValue);
+            }
+
+            boolean created = farmDataService.createSensor(
+                    zoneValue.split(" - ")[0],
+                    sensorCode,
+                    sensorType,
+                    minThreshold,
+                    maxThreshold,
+                    animalId,
+                    latMin,
+                    latMax,
+                    lonMin,
+                    lonMax
+            );
+            if (created) {
+                showCreateValidation("Sensor created successfully.");
+                clearCreateSensorForm();
+                refreshView();
+            } else {
+                showCreateValidation("Unable to create sensor. Check type, zone and required fields.");
+            }
+        } catch (NumberFormatException e) {
+            showCreateValidation("Thresholds and GPS coordinates must be valid numbers.");
+        }
+    }
+
+    private void clearCreateSensorForm() {
+        createSensorCodeField.clear();
+        createMinThresholdField.clear();
+        createMaxThresholdField.clear();
+        createAnimalIdField.clear();
+        createLatMinField.clear();
+        createLatMaxField.clear();
+        createLonMinField.clear();
+        createLonMaxField.clear();
+    }
+
+    private void showCreateValidation(String message) {
+        sensorCreateValidationLabel.setText(message);
     }
 
     private void applyFilters() {
@@ -268,5 +385,6 @@ public class SensorsController implements PageController {
         sensorsTable.setItems(FXCollections.observableArrayList(farmDataService.getAllSensors()));
         selectedSensorLabel.setText("Selected: None");
         historyTable.setItems(FXCollections.observableArrayList());
+        populateCreateZoneOptions();
     }
 }

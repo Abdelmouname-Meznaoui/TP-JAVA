@@ -109,6 +109,57 @@ public class FarmDataService {
         }
     }
 
+    public boolean createSensor(String zoneCode, String sensorCode, String sensorType,
+                                double minThreshold, double maxThreshold,
+                                String animalId, Double latMin, Double latMax,
+                                Double lonMin, Double lonMax) {
+        if (findSensorByCode(sensorCode) != null) {
+            return false;
+        }
+
+        Zone zone = findZoneByCode(zoneCode);
+        if (zone == null) {
+            return false;
+        }
+
+        switch (sensorType) {
+            case "SoilSensor" -> {
+                if (zone instanceof CropZone cropZone) {
+                    cropZone.createSoilSensor(sensorCode, minThreshold, maxThreshold);
+                    return true;
+                }
+            }
+            case "EnvironmentalSensor" -> {
+                if (zone instanceof CropZone cropZone) {
+                    cropZone.createEnvironmentalSensor(sensorCode, minThreshold, maxThreshold);
+                    return true;
+                }
+            }
+            case "WaterSensor" -> {
+                if (zone instanceof AquacultureZone aquacultureZone) {
+                    aquacultureZone.createWaterSensor(sensorCode, minThreshold, maxThreshold);
+                    return true;
+                }
+            }
+            case "BiometricSensor" -> {
+                if (zone instanceof LivestockZone livestockZone && animalId != null && !animalId.isBlank()) {
+                    livestockZone.addSensor(new BiometricSensor(sensorCode, zoneCode, animalId, minThreshold, maxThreshold));
+                    return true;
+                }
+            }
+            case "GpsCollarSensor" -> {
+                if (zone instanceof LivestockZone livestockZone
+                        && animalId != null && !animalId.isBlank()
+                        && latMin != null && latMax != null && lonMin != null && lonMax != null) {
+                    livestockZone.addSensor(new GpsCollarSensor(sensorCode, zoneCode, animalId, latMin, latMax, lonMin, lonMax));
+                    return true;
+                }
+            }
+            default -> { }
+        }
+        return false;
+    }
+
     private Zone findZoneByCode(String code) {
         for (Zone zone : farm.getZones()) {
             if (zone.getCode().equals(code)) {

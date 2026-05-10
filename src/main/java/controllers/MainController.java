@@ -25,6 +25,7 @@ public class MainController {
     @FXML private StackPane contentHost;
     @FXML private Button dashboardButton;
     @FXML private Button zonesButton;
+    @FXML private Button sensorsButton;
     @FXML private Button alertsButton;
 
     private final Map<AppPage, Parent> pageViews = new EnumMap<>(AppPage.class);
@@ -52,6 +53,11 @@ public class MainController {
     @FXML
     private void showZones() {
         showPage(AppPage.ZONES);
+    }
+
+    @FXML
+    private void showSensors() {
+        showPage(AppPage.SENSORS);
     }
 
     @FXML
@@ -108,6 +114,7 @@ public class MainController {
         return switch (page) {
             case DASHBOARD -> "/views/dashboard-view.fxml";
             case ZONES -> "/views/zones-view.fxml";
+            case SENSORS -> "/views/sensors-view.fxml";
             case ALERTS -> "/views/alerts-view.fxml";
         };
     }
@@ -120,11 +127,13 @@ public class MainController {
     private void updateNavState() {
         dashboardButton.getStyleClass().remove("active");
         zonesButton.getStyleClass().remove("active");
+        sensorsButton.getStyleClass().remove("active");
         alertsButton.getStyleClass().remove("active");
 
         Button activeButton = switch (currentPage) {
             case DASHBOARD -> dashboardButton;
             case ZONES -> zonesButton;
+            case SENSORS -> sensorsButton;
             case ALERTS -> alertsButton;
         };
         if (!activeButton.getStyleClass().contains("active")) {
@@ -143,6 +152,7 @@ public class MainController {
     private void installNavEffects() {
         UiEffects.installLift(dashboardButton);
         UiEffects.installLift(zonesButton);
+        UiEffects.installLift(sensorsButton);
         UiEffects.installLift(alertsButton);
     }
 }
