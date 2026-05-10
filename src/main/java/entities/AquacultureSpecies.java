@@ -1,8 +1,6 @@
 package entities;
 
-/**
- * Represents an aquaculture species in a tank (fish, shrimp, etc.)
- */
+
 public class AquacultureSpecies {
     private final String id;
     private String speciesName;

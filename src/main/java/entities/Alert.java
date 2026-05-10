@@ -1,14 +1,12 @@
 package entities;
 
-import entities.enums.AlertSeverity;
-import entities.enums.AlertStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * Alert generated when a sensor reading exceeds configured thresholds.
- * Characterised by a severity level (warning or critical).
- */
+import entities.enums.AlertSeverity;
+import entities.enums.AlertStatus;
+
+
 public class Alert {
     private final String id;
     private final String sensorCode;

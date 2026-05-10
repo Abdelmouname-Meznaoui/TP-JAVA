@@ -2,9 +2,7 @@ package entities;
 
 import java.time.LocalDateTime;
 
-/**
- * GPS reading with latitude and longitude.
- */
+
 public class GPSReading extends Reading {
     private final double latitude;
     private final double longitude;

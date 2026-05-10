@@ -1,14 +1,12 @@
 package entities;
 
+import java.time.LocalDateTime;
+
 import entities.enums.AlertSeverity;
 import entities.enums.AlertStatus;
 import entities.enums.MeasurementType;
 
-import java.time.LocalDateTime;
 
-/**
- * Filter criteria used to match alerts by common fields.
- */
 public class AlertFilter {
     private String zoneCode;
     private MeasurementType measurementType;

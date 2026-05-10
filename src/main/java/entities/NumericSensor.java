@@ -2,9 +2,7 @@ package entities;
 
 import entities.enums.ReadingLevel;
 
-/**
- * Base class for sensors that produce numeric readings.
- */
+
 public abstract class NumericSensor extends Sensor {
 
     public NumericSensor(String code, String zoneCode, ThresholdRange thresholdRange) {

@@ -2,9 +2,7 @@ package entities;
 
 import java.time.LocalDateTime;
 
-/**
- * Records a health event for an animal (illness, weight change, etc.)
- */
+
 public class HealthEvent {
     private final String description;
     private final LocalDateTime timestamp;

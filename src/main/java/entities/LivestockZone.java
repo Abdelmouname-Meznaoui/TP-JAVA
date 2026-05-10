@@ -1,15 +1,13 @@
 package entities;
 
-import entities.enums.LivestockType;
-import entities.enums.ZoneType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Livestock zone hosts animals (ruminants or poultry)
- * equipped with biometric sensors and GPS collars.
- */
+import entities.enums.LivestockType;
+import entities.enums.ZoneType;
+
+
 public class LivestockZone extends Zone {
     private final LivestockType livestockType;
     private final List<Animal> animals;

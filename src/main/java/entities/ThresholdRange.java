@@ -1,8 +1,6 @@
 package entities;
 
-/**
- * Holds a min/max threshold range for numeric sensors.
- */
+
 public class ThresholdRange {
     private double minThreshold;
     private double maxThreshold;

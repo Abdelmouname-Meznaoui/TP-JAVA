@@ -2,9 +2,7 @@ package entities;
 
 import java.time.LocalDateTime;
 
-/**
- * Base class for all sensor readings.
- */
+
 public abstract class Reading {
     private final String sensorCode;
     private final LocalDateTime timestamp;

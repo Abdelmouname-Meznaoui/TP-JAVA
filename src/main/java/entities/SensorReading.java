@@ -1,13 +1,10 @@
 package entities;
 
-import entities.enums.ReadingLevel;
-
 import java.time.LocalDateTime;
 
-/**
- * Represents a single reading from a sensor.
- * Immutable value object.
- */
+import entities.enums.ReadingLevel;
+
+
 @Deprecated
 public class SensorReading extends NumericReading {
 

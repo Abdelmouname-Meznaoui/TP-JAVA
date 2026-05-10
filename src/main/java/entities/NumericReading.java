@@ -1,12 +1,10 @@
 package entities;
 
-import entities.enums.ReadingLevel;
-
 import java.time.LocalDateTime;
 
-/**
- * Numeric reading produced by a sensor.
- */
+import entities.enums.ReadingLevel;
+
+
 public class NumericReading extends Reading {
     private final double value;
     private final String unit;

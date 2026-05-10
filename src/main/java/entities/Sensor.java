@@ -1,16 +1,12 @@
 package entities;
 
-import entities.enums.MeasurementType;
-import entities.enums.SensorStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Abstract sensor entity. Each sensor has a unique code,
- * belongs to a zone, has a status and a threshold range.
- * GPS collar sensors are a special subtype.
- */
+import entities.enums.MeasurementType;
+import entities.enums.SensorStatus;
+
+
 public abstract class Sensor implements Suspendable {
     private final String code;
     private SensorStatus status;

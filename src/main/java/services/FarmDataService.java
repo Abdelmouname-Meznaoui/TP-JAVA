@@ -807,6 +807,30 @@ public class FarmDataService {
         }
     }
 
+    /**
+     * Record a reading for a sensor and trigger alert checks.
+     * Returns true if the reading was recorded, false otherwise.
+     */
+    public boolean recordSensorReading(String sensorCode, double readingValue) {
+        Sensor sensor = findSensorByCode(sensorCode);
+        if (sensor == null || !sensor.isActive()) return false;
+
+        // Record the reading on numeric sensors or delegate accordingly
+        if (sensor instanceof entities.NumericSensor numericSensor) {
+            numericSensor.recordReading(readingValue);
+        } else if (sensor instanceof entities.GpsCollarSensor) {
+            // GPS sensors don't use numeric readings in the same way; ignore
+            return false;
+        } else {
+            // Non-numeric or unsupported sensor types: cannot record numeric reading here
+            return false;
+        }
+
+        // After recording, check thresholds and possibly create an alert
+        checkAndTriggerAlert(sensorCode, readingValue);
+        return true;
+    }
+
     // ===== HELPER METHODS =====
     
     private Sensor findSensorByCode(String sensorCode) {

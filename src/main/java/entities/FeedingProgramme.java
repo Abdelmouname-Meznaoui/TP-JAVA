@@ -1,9 +1,6 @@
 package entities;
 
-/**
- * Defines a feeding programme for a livestock or aquaculture zone.
- * Specifies the feed type and quantity per meal.
- */
+
 public class FeedingProgramme {
     private String feedType;
     private double quantityPerMealKg;

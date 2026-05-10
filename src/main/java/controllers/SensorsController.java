@@ -74,6 +74,7 @@ public class SensorsController implements PageController {
         // Setup action buttons column
         actionsColumn.setCellFactory(param -> new TableCell<SensorReadingSummary, Void>() {
             private final Button viewBtn = new Button("View History");
+            private final Button addReadingBtn = new Button("Add Reading");
             private final Button editBtn = new Button("Edit");
             private final HBox hbox = new HBox(5);
             
@@ -81,7 +82,7 @@ public class SensorsController implements PageController {
                 viewBtn.setStyle("-fx-font-size: 10; -fx-padding: 5;");
                 editBtn.setStyle("-fx-font-size: 10; -fx-padding: 5;");
                 hbox.setAlignment(Pos.CENTER);
-                hbox.getChildren().addAll(viewBtn, editBtn);
+                hbox.getChildren().addAll(viewBtn, addReadingBtn, editBtn);
                 
                 viewBtn.setOnAction(event -> {
                     SensorReadingSummary sensor = getTableView().getItems().get(getIndex());
@@ -89,7 +90,34 @@ public class SensorsController implements PageController {
                     selectedSensorLabel.setText("Selected: " + sensor.sensorCode() + " (" + sensor.sensorType() + ")");
                     loadSensorHistory();
                 });
-                
+
+                addReadingBtn.setStyle("-fx-font-size: 10; -fx-padding: 5;");
+                addReadingBtn.setOnAction(event -> {
+                    SensorReadingSummary sensor = getTableView().getItems().get(getIndex());
+                    TextInputDialog input = new TextInputDialog();
+                    input.setTitle("Add Reading");
+                    input.setHeaderText("Add reading for " + sensor.sensorCode());
+                    input.setContentText("Enter numeric value (" + sensor.unit() + "): ");
+                    input.showAndWait().ifPresent(valueStr -> {
+                        try {
+                            double val = Double.parseDouble(valueStr);
+                            boolean ok = farmDataService.recordSensorReading(sensor.sensorCode(), val);
+                            if (ok) {
+                                showAlert("Success", "Reading recorded.");
+                                // refresh table and history if this sensor is selected
+                                refreshView();
+                                if (sensor.sensorCode().equals(selectedSensorCode)) {
+                                    loadSensorHistory();
+                                }
+                            } else {
+                                showAlert("Error", "Unable to record reading for this sensor.");
+                            }
+                        } catch (NumberFormatException ex) {
+                            showAlert("Invalid Value", "Please enter a valid number.");
+                        }
+                    });
+                });
+
                 editBtn.setOnAction(event -> {
                     SensorReadingSummary sensor = getTableView().getItems().get(getIndex());
                     showEditSensorDialog(sensor);

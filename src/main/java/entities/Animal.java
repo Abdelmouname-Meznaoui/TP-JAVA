@@ -1,13 +1,11 @@
 package entities;
 
-import entities.enums.HealthStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a livestock animal.
- * Identified by a unique number, characterised by species, age, weight and health status.
- */
+import entities.enums.HealthStatus;
+
+
 public class Animal {
     private final String id;
     private String species;

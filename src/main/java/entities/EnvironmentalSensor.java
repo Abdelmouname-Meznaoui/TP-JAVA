@@ -1,8 +1,7 @@
 package entities;
 import entities.enums.MeasurementType;
-/**
- * Numeric sensor specialized for environmental measurements.
- */
+
+
 public class EnvironmentalSensor extends NumericSensor {
 
     private final MeasurementType measurementType;
