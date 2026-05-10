@@ -194,6 +194,7 @@
                         <TextField fx:id="feedNotesField" promptText="Optional notes" styleClass="text-input" />
                         <Button mnemonicParsing="false" onAction="#setFeedingProgramme" styleClass="primary-button" text="Save Programme" />
                         <Button mnemonicParsing="false" onAction="#showFeedingReport" styleClass="secondary-button" text="View Feeding Report" />
+                        <Button mnemonicParsing="false" onAction="#showAquacultureReport" styleClass="secondary-button" text="View Aquaculture Report" />
                         <Label fx:id="feedingValidationLabel" text="Define a programme for the selected zone." wrapText="true" styleClass="helper-text" />
                     </children>
                 </VBox>

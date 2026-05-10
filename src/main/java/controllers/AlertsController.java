@@ -2,10 +2,12 @@ package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import models.AlertSummary;
 import services.FarmDataService;
+import java.util.List;
 
 public class AlertsController implements PageController {
     @FXML private TableView<AlertSummary> alertsTable;
@@ -22,6 +24,10 @@ public class AlertsController implements PageController {
     @Override
     public void bind(FarmDataService farmDataService, MainController mainController) {
         this.farmDataService = farmDataService;
+        setupTableColumns();
+    }
+
+    private void setupTableColumns() {
         idColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::id));
         severityColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::severity));
         zoneColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::zoneCode));
@@ -33,6 +39,6 @@ public class AlertsController implements PageController {
 
     @Override
     public void refreshView() {
-        alertsTable.setItems(FXCollections.observableArrayList(farmDataService.getAlertSummaries()));
+        alertsTable.setItems(FXCollections.observableArrayList(farmDataService.getAlertsSortedBySeverity()));
     }
 }

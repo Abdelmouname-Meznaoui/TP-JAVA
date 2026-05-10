@@ -413,6 +413,18 @@ public class ZonesController implements PageController {
         a.show();
     }
 
+    @FXML
+    private void showAquacultureReport() {
+        String report = farmDataService.generateAquacultureReport();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText("Aquaculture Status Report");
+        a.setContentText(report);
+        a.getDialogPane().setStyle("-fx-font-family: 'Courier New'; -fx-font-size: 10;");
+        a.setWidth(600);
+        a.setHeight(400);
+        a.show();
+    }
+
     private void showCropValidation(String message) {
         if (!cropValidationLabel.getStyleClass().contains("error-text")) {
             cropValidationLabel.getStyleClass().add("error-text");

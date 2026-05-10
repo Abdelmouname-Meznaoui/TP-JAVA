@@ -16,6 +16,11 @@ public class FeedingProgramme {
         this.mealsPerDay = mealsPerDay;
     }
 
+    public FeedingProgramme(String feedType, double quantityPerMealKg, int mealsPerDay, String notes) {
+        this(feedType, quantityPerMealKg, mealsPerDay);
+        this.notes = notes;
+    }
+
     public String getFeedType() { return feedType; }
     public void setFeedType(String feedType) { this.feedType = feedType; }
     public double getQuantityPerMealKg() { return quantityPerMealKg; }
