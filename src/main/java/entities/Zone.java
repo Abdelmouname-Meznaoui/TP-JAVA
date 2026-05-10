@@ -1,17 +1,13 @@
 package entities;
 
-import entities.enums.ZoneStatus;
-import entities.enums.ZoneType;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Abstract base class for all farm zones.
- * A zone is identified by a unique code and a name,
- * and can be active or suspended.
- */
+import entities.enums.ZoneStatus;
+import entities.enums.ZoneType;
+
+
 public abstract class Zone implements Suspendable {
     private final String code;
     private String name;

@@ -1,16 +1,14 @@
 package entities;
 
-import entities.enums.ZoneType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import entities.enums.MeasurementType;
 
-/**
- * Crop zone hosts crop fields and is equipped with
- * environmental and soil sensors.
- */
+import entities.enums.MeasurementType;
+import entities.enums.ZoneType;
+
+
 public class CropZone extends Zone {
     private final List<Crop> crops;
 

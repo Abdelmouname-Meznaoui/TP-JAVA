@@ -1,44 +1,43 @@
 package services;
 
-import entities.Alert;
-import entities.Animal;
-import entities.AquacultureSpecies;
-import entities.AquacultureZone;
-import entities.BiometricSensor;
-import entities.FeedingProgramme;
-import entities.Crop;
-import entities.CropZone;
-import entities.Farm;
-import entities.GpsCollarSensor;
-import entities.HealthEvent;
-import entities.LivestockZone;
-import entities.SoilSensor;
-import entities.WaterSensor;
-import entities.Zone;
-import entities.enums.AlertSeverity;
-import entities.enums.CropFamily;
-import entities.enums.HealthStatus;
-import entities.enums.LivestockType;
-import models.AlertSummary;
-import models.AnimalSummary;
-import models.CropSummary;
-import models.DashboardMetrics;
-import models.FeedingProgrammeSummary;
-import models.ZoneSummary;
-import models.SensorReadingSummary;
-import models.ReadingHistorySummary;
-import entities.enums.GrowthStage;
-import entities.enums.SensorStatus;
-import entities.Reading;
-import entities.Sensor;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import entities.Alert;
+import entities.Animal;
+import entities.AquacultureSpecies;
+import entities.AquacultureZone;
+import entities.BiometricSensor;
+import entities.Crop;
+import entities.CropZone;
+import entities.Farm;
+import entities.FeedingProgramme;
+import entities.GpsCollarSensor;
+import entities.HealthEvent;
+import entities.LivestockZone;
+import entities.Reading;
+import entities.Sensor;
+import entities.SoilSensor;
+import entities.WaterSensor;
+import entities.Zone;
+import entities.enums.AlertSeverity;
+import entities.enums.CropFamily;
+import entities.enums.GrowthStage;
+import entities.enums.HealthStatus;
+import entities.enums.LivestockType;
+import entities.enums.SensorStatus;
+import models.AlertSummary;
+import models.AnimalSummary;
+import models.CropSummary;
+import models.DashboardMetrics;
+import models.FeedingProgrammeSummary;
+import models.ReadingHistorySummary;
+import models.SensorReadingSummary;
+import models.ZoneSummary;
 
 public class FarmDataService {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("MMM d, HH:mm");
@@ -111,10 +110,12 @@ public class FarmDataService {
     }
 
     private Zone findZoneByCode(String code) {
-        return farm.getZones().stream()
-                .filter(z -> z.getCode().equals(code))
-                .findFirst()
-                .orElse(null);
+        for (Zone zone : farm.getZones()) {
+            if (zone.getCode().equals(code)) {
+                return zone;
+            }
+        }
+        return null;
     }
 
     public boolean updateZoneName(String zoneCode, String newName) {
@@ -245,7 +246,7 @@ public class FarmDataService {
 
     public boolean setFeedingProgramme(String zoneCode, String feedType, double quantityPerMealKg, int mealsPerDay, String notes) {
         Zone zone = findZoneByCode(zoneCode);
-        if (zone instanceof LivestockZone livestockZone) {
+        if ((zone instanceof LivestockZone livestockZone)) {
             FeedingProgramme programme = new FeedingProgramme(feedType, quantityPerMealKg, mealsPerDay);
             programme.setNotes(notes);
             livestockZone.setFeedingProgramme(programme);
@@ -263,17 +264,19 @@ public class FarmDataService {
     public List<FeedingProgrammeSummary> getFeedingProgrammeSummaries() {
         List<FeedingProgrammeSummary> summaries = new ArrayList<>();
         for (Zone zone : farm.getZones()) {
-            FeedingProgramme programme = null;
-            if (zone instanceof LivestockZone livestockZone) {
-                programme = livestockZone.getFeedingProgramme();
-            } else if (zone instanceof AquacultureZone aquacultureZone) {
-                programme = aquacultureZone.getFeedingProgramme();
-            }
+            Zone currentZone = java.util.Objects.requireNonNull(zone);
+            String zoneCode = currentZone.getCode() == null ? "UNKNOWN" : currentZone.getCode();
+            String zoneName = currentZone.getName() == null ? "UNKNOWN" : currentZone.getName();
+            FeedingProgramme programme = switch (currentZone) {
+                case LivestockZone livestockZone -> livestockZone.getFeedingProgramme();
+                case AquacultureZone aquacultureZone -> aquacultureZone.getFeedingProgramme();
+                default -> null;
+            };
             if (programme != null) {
                 summaries.add(new FeedingProgrammeSummary(
-                        zone.getCode(),
-                        zone.getName(),
-                        zone.getType().name(),
+                        zoneCode,
+                        zoneName,
+                        currentZone.getType().name(),
                         programme.getFeedType(),
                         programme.getQuantityPerMealKg(),
                         programme.getMealsPerDay(),
@@ -336,10 +339,10 @@ public class FarmDataService {
     // ===== CROP MANAGEMENT =====
     public List<CropSummary> getCropsByZone(String zoneCode) {
         Zone zone = findZoneByCode(zoneCode);
-        if (!(zone instanceof CropZone)) return new ArrayList<>();
+        if (!(zone instanceof CropZone cropZone)) return new ArrayList<>();
         
         List<CropSummary> crops = new ArrayList<>();
-        for (Crop crop : ((CropZone) zone).getCrops()) {
+        for (Crop crop : cropZone.getCrops()) {
             CropSummary summary = new CropSummary(
                     crop.getId(),
                     crop.getName(),
@@ -348,7 +351,7 @@ public class FarmDataService {
                     crop.getPlantingDate().toString(),
                     crop.getExpectedHarvestDate().toString(),
                     zoneCode,
-                    zone.getName()
+                    cropZone.getName()
             );
             crops.add(summary);
         }
@@ -358,8 +361,8 @@ public class FarmDataService {
     public List<CropSummary> getAllCrops() {
         List<CropSummary> allCrops = new ArrayList<>();
         for (Zone zone : farm.getZones()) {
-            if (zone instanceof CropZone) {
-                allCrops.addAll(getCropsByZone(zone.getCode()));
+            if (zone instanceof CropZone cropZone) {
+                allCrops.addAll(getCropsByZone(cropZone.getCode()));
             }
         }
 
@@ -371,8 +374,8 @@ public class FarmDataService {
         try {
             GrowthStage stage = GrowthStage.valueOf(growthStageName);
             for (Zone zone : farm.getZones()) {
-                if (zone instanceof CropZone) {
-                    for (Crop crop : ((CropZone) zone).getCrops()) {
+                if (zone instanceof CropZone cropZone) {
+                    for (Crop crop : cropZone.getCrops()) {
                         if (crop.getId().equals(cropId)) {
                             crop.setGrowthStage(stage);
                             return true;
@@ -391,8 +394,7 @@ public class FarmDataService {
         report.append("=== CROP STATUS REPORT ===\n\n");
         
         for (Zone zone : farm.getZones()) {
-            if (zone instanceof CropZone) {
-                CropZone cropZone = (CropZone) zone;
+            if (zone instanceof CropZone cropZone) {
                 report.append("ZONE: ").append(cropZone.getName())
                         .append(" [").append(cropZone.getCode()).append("]\n");
                 report.append("Status: ").append(cropZone.getStatus()).append("\n");
@@ -434,9 +436,9 @@ public class FarmDataService {
                 } else {
                     for (AquacultureSpecies species : aquacultureZone.getSpecies()) {
                         report.append("  - [").append(species.getId()).append("] ")
-                                .append(species.getName()).append("\n");
-                        report.append("    Population: ").append(species.getPopulation()).append(" individuals\n");
-                        report.append("    Average Weight: ").append(species.getAverageWeightKg()).append(" kg\n");
+                                .append(species.getSpeciesName()).append("\n");
+                        report.append("    Population: ").append(species.getCount()).append(" individuals\n");
+                        report.append("    Average Weight: ").append(species.getAverageWeightGrams()).append(" g\n");
                     }
                 }
                 report.append("\n");
@@ -447,9 +449,6 @@ public class FarmDataService {
 
     // ===== SENSOR MANAGEMENT =====
     
-    /**
-     * Get all sensors from all zones
-     */
     public List<SensorReadingSummary> getAllSensors() {
         List<SensorReadingSummary> summaries = new ArrayList<>();
         
@@ -487,9 +486,7 @@ public class FarmDataService {
         return summaries;
     }
 
-    /**
-     * Get sensors for a specific zone
-     */
+
     public List<SensorReadingSummary> getSensorsByZone(String zoneCode) {
         Zone zone = findZoneByCode(zoneCode);
         if (zone == null) return new ArrayList<>();
@@ -527,9 +524,7 @@ public class FarmDataService {
         return summaries;
     }
 
-    /**
-     * Get sensor reading history filtered by date range
-     */
+    
     public List<ReadingHistorySummary> getSensorReadingHistory(String sensorCode, LocalDate startDate, LocalDate endDate) {
         Sensor sensor = findSensorByCode(sensorCode);
         if (sensor == null) return new ArrayList<>();
@@ -564,9 +559,7 @@ public class FarmDataService {
         return history;
     }
 
-    /**
-     * Change sensor status (active, failing, suspended)
-     */
+    
     public boolean changeSensorStatus(String sensorCode, String status) {
         try {
             Sensor sensor = findSensorByCode(sensorCode);
@@ -580,9 +573,7 @@ public class FarmDataService {
         }
     }
 
-    /**
-     * Update sensor threshold range
-     */
+    
     public boolean updateSensorThresholds(String sensorCode, double minThreshold, double maxThreshold) {
         Sensor sensor = findSensorByCode(sensorCode);
         if (sensor == null) return false;
@@ -594,9 +585,7 @@ public class FarmDataService {
         return true;
     }
 
-    /**
-     * Get alert summaries sorted by severity (critical first)
-     */
+    
     public List<AlertSummary> getAlertsSortedBySeverity() {
         List<Alert> alerts = new ArrayList<>(farm.getAlerts());
         
@@ -624,69 +613,68 @@ public class FarmDataService {
         return summaries;
     }
 
-    /**
-     * Get only active alerts
-     */
+    
     public List<AlertSummary> getActiveAlerts() {
-        return getAlertsSortedBySeverity().stream()
-                .filter(alert -> "ACTIVE".equals(alert.status()))
-                .toList();
+    List<AlertSummary> result = new ArrayList<>();
+    for (AlertSummary alert : getAlertsSortedBySeverity()) {
+        if ("ACTIVE".equals(alert.status())) {
+            result.add(alert);
+        }
     }
+    return result;
+}
 
-    /**
-     * Filter alerts by zone
-     */
     public List<AlertSummary> filterAlertsByZone(String zoneCode) {
-        return getAlertsSortedBySeverity().stream()
-                .filter(alert -> zoneCode.equals(alert.zoneCode()))
-                .toList();
+        List<AlertSummary> result = new ArrayList<>();
+        for (AlertSummary alert : getAlertsSortedBySeverity()) {
+            if (zoneCode.equals(alert.zoneCode())) {
+                result.add(alert);
+            }
+        }
+        return result;
     }
 
-    /**
-     * Filter alerts by sensor type
-     */
     public List<AlertSummary> filterAlertsBySensorType(String sensorType) {
-        return getAlertsSortedBySeverity().stream()
-                .filter(alert -> {
-                    Sensor sensor = findSensorByCode(alert.sensorCode());
-                    return sensor != null && sensorType.equals(sensor.getType());
-                })
-                .toList();
+        List<AlertSummary> result = new ArrayList<>();
+        for (AlertSummary alert : getAlertsSortedBySeverity()) {
+            Sensor sensor = findSensorByCode(alert.sensorCode());
+            if (sensor != null && sensorType.equals(sensor.getType())) {
+                result.add(alert);
+            }
+        }
+        return result;
     }
 
-    /**
-     * Filter alerts by severity level
-     */
     public List<AlertSummary> filterAlertsBySeverity(String severity) {
-        return getAlertsSortedBySeverity().stream()
-                .filter(alert -> severity.equals(alert.severity()))
-                .toList();
+        List<AlertSummary> result = new ArrayList<>();
+        for (AlertSummary alert : getAlertsSortedBySeverity()) {
+            if (severity.equals(alert.severity())) {
+                result.add(alert);
+            }
+        }
+        return result;
     }
 
-    /**
-     * Filter alerts by date range
-     */
     public List<AlertSummary> filterAlertsByDateRange(LocalDate startDate, LocalDate endDate) {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
-        
-        return getAlertsSortedBySeverity().stream()
-                .filter(alert -> {
-                    try {
-                        // Parse the alert time back to LocalDateTime for comparison
-                        LocalDateTime alertTime = LocalDateTime.parse(alert.triggeredAt(), DateTimeFormatter.ofPattern("MMM d, HH:mm").withLocale(java.util.Locale.ENGLISH));
-                        return (alertTime.isAfter(startDateTime) || alertTime.isEqual(startDateTime)) &&
-                               alertTime.isBefore(endDateTime);
-                    } catch (Exception e) {
-                        return false;
-                    }
-                })
-                .toList();
+
+        List<AlertSummary> result = new ArrayList<>();
+        for (AlertSummary alert : getAlertsSortedBySeverity()) {
+            try {
+                LocalDateTime alertTime = LocalDateTime.parse(alert.triggeredAt(), DateTimeFormatter.ofPattern("MMM d, HH:mm").withLocale(java.util.Locale.ENGLISH));
+                if ((alertTime.isAfter(startDateTime) || alertTime.isEqual(startDateTime)) &&
+                        alertTime.isBefore(endDateTime)) {
+                    result.add(alert);
+                }
+            } catch (Exception e) {
+                // skip unparseable alerts
+            }
+        }
+        return result;
     }
 
-    /**
-     * Acknowledge alert by ID
-     */
+   
     public boolean acknowledgeAlert(String alertId) {
         Alert alert = findAlertById(alertId);
         if (alert == null) return false;
@@ -694,9 +682,7 @@ public class FarmDataService {
         return true;
     }
 
-    /**
-     * Dismiss alert by ID
-     */
+    
     public boolean dismissAlert(String alertId) {
         Alert alert = findAlertById(alertId);
         if (alert == null) return false;
@@ -704,56 +690,49 @@ public class FarmDataService {
         return true;
     }
 
-    /**
-     * Get alerts history with filtering options
-     */
+    
     public List<AlertSummary> getAlertsHistory(String zoneCode, String sensorType, String severity, LocalDate startDate, LocalDate endDate) {
-        List<AlertSummary> filtered = getAlertsSortedBySeverity();
-        
-        if (zoneCode != null && !zoneCode.isEmpty()) {
-            filtered = filtered.stream()
-                    .filter(alert -> zoneCode.equals(alert.zoneCode()))
-                    .toList();
-        }
-        
-        if (sensorType != null && !sensorType.isEmpty()) {
-            filtered = filtered.stream()
-                    .filter(alert -> {
-                        Sensor sensor = findSensorByCode(alert.sensorCode());
-                        return sensor != null && sensorType.equals(sensor.getType());
-                    })
-                    .toList();
-        }
-        
-        if (severity != null && !severity.isEmpty()) {
-            filtered = filtered.stream()
-                    .filter(alert -> severity.equals(alert.severity()))
-                    .toList();
-        }
-        
-        if (startDate != null && endDate != null) {
-            LocalDateTime startDateTime = startDate.atStartOfDay();
-            LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay();
-            
-            filtered = filtered.stream()
-                    .filter(alert -> {
-                        try {
-                            LocalDateTime alertTime = LocalDateTime.parse(alert.triggeredAt(), DateTimeFormatter.ofPattern("MMM d, HH:mm").withLocale(java.util.Locale.ENGLISH));
-                            return (alertTime.isAfter(startDateTime) || alertTime.isEqual(startDateTime)) &&
-                                   alertTime.isBefore(endDateTime);
-                        } catch (Exception e) {
-                            return false;
-                        }
-                    })
-                    .toList();
-        }
-        
-        return new ArrayList<>(filtered);
+    List<AlertSummary> filtered = new ArrayList<>(getAlertsSortedBySeverity());
+
+    List<AlertSummary> result = new ArrayList<>();
+
+    LocalDateTime startDateTime = null;
+    LocalDateTime endDateTime = null;
+    if (startDate != null && endDate != null) {
+        startDateTime = startDate.atStartOfDay();
+        endDateTime = endDate.plusDays(1).atStartOfDay();
     }
 
-    /**
-     * Trigger an alert when a reading exceeds thresholds
-     */
+    for (AlertSummary alert : filtered) {
+        if (zoneCode != null && !zoneCode.isEmpty()) {
+            if (!zoneCode.equals(alert.zoneCode())) continue;
+        }
+
+        if (sensorType != null && !sensorType.isEmpty()) {
+            Sensor sensor = findSensorByCode(alert.sensorCode());
+            if (sensor == null || !sensorType.equals(sensor.getType())) continue;
+        }
+
+        if (severity != null && !severity.isEmpty()) {
+            if (!severity.equals(alert.severity())) continue;
+        }
+
+        if (startDateTime != null && endDateTime != null) {
+            try {
+                LocalDateTime alertTime = LocalDateTime.parse(alert.triggeredAt(), DateTimeFormatter.ofPattern("MMM d, HH:mm").withLocale(java.util.Locale.ENGLISH));
+                if (alertTime.isBefore(startDateTime) || !alertTime.isBefore(endDateTime)) continue;
+            } catch (Exception e) {
+                continue;
+            }
+        }
+
+        result.add(alert);
+    }
+
+    return result;
+}
+
+    
     public void checkAndTriggerAlert(String sensorCode, double readingValue) {
         Sensor sensor = findSensorByCode(sensorCode);
         if (sensor == null || !sensor.isActive()) return;
@@ -838,6 +817,9 @@ public class FarmDataService {
     private String formatDateTime(LocalDateTime dateTime) {
         return DATE_TIME_FORMATTER.format(dateTime);
     }
+
+    ///////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////
 
     private Farm createSampleFarm() {
         Farm sampleFarm = new Farm("Alger Farm");

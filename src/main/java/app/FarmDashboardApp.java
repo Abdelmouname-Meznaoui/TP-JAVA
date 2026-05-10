@@ -1,5 +1,7 @@
 package app;
 
+import java.io.IOException;
+
 import controllers.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,8 +9,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import services.FarmDataService;
-
-import java.io.IOException;
 
 public class FarmDashboardApp extends Application {
     private final FarmDataService farmDataService = new FarmDataService();
@@ -28,7 +28,7 @@ public class FarmDashboardApp extends Application {
         Scene scene = new Scene(root, 1360, 860);
         scene.getStylesheets().add(getClass().getResource("/styles/app.css").toExternalForm());
 
-        stage.setTitle("FarmFlow Control Center");
+        stage.setTitle("Farm Management");
         stage.setMinWidth(1120);
         stage.setMinHeight(720);
         stage.setScene(scene);

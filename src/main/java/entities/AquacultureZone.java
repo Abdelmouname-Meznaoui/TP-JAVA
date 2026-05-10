@@ -1,14 +1,12 @@
 package entities;
 
-import entities.enums.ZoneType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Aquaculture zone hosts aquatic species in a tank
- * with water sensors monitoring temperature and dissolved oxygen.
- */
+import entities.enums.ZoneType;
+
+
 public class AquacultureZone extends Zone {
     private final List<AquacultureSpecies> species;
     private FeedingProgramme feedingProgramme;

@@ -1,13 +1,11 @@
 package entities;
 
-import entities.enums.CropFamily;
-import entities.enums.GrowthStage;
 import java.time.LocalDate;
 
-/**
- * Represents a crop in a crop zone.
- * Has planting/harvest dates, growth stage, and soil requirements.
- */
+import entities.enums.CropFamily;
+import entities.enums.GrowthStage;
+
+
 public class Crop {
     private final String id;
     private String name;

@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -49,12 +50,12 @@ public class SensorsController implements PageController {
     }
 
     private void setupSensorTable() {
-        sensorCodeColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::sensorCode));
-        sensorTypeColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::sensorType));
-        zoneColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::zoneName));
-        statusColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::status));
-        lastReadingColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::lastReading));
-        readingLevelColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::readingLevel));
+        sensorCodeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().sensorCode()));
+        sensorTypeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().sensorType()));
+        zoneColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().zoneName()));
+        statusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().status()));
+        lastReadingColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().lastReading()));
+        readingLevelColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().readingLevel()));
         
         // Setup action buttons column
         actionsColumn.setCellFactory(param -> new TableCell<SensorReadingSummary, Void>() {
@@ -112,10 +113,10 @@ public class SensorsController implements PageController {
     }
 
     private void setupHistoryTable() {
-        historyTimeColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::readingTime));
-        historyValueColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(() -> 
-            data.getValue().readingValue() + " " + data.getValue().unit()));
-        historyLevelColumn.setCellValueFactory(data -> javafx.beans.binding.Bindings.createObjectBinding(data.getValue()::readingLevel));
+        historyTimeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().readingTime()));
+        historyValueColumn.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().readingValue() + " " + data.getValue().unit()));
+        historyLevelColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().readingLevel()));
     }
 
     private void setupFilters() {
@@ -207,7 +208,7 @@ public class SensorsController implements PageController {
     }
 
     private void showEditSensorDialog(SensorReadingSummary sensor) {
-        Dialog<Void> dialog = new Dialog<>();
+        Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Edit Sensor");
         dialog.setHeaderText("Edit Sensor: " + sensor.sensorCode());
         
@@ -235,18 +236,16 @@ public class SensorsController implements PageController {
         
         dialog.getDialogPane().setContent(content);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        
-        dialog.setOnCloseRequest(event -> {
-            if (dialog.getResult() != null) {
+
+        dialog.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == ButtonType.OK) {
                 try {
-                    // Update sensor status
                     farmDataService.changeSensorStatus(sensor.sensorCode(), statusCombo.getValue());
-                    
-                    // Update thresholds
+
                     double minThreshold = Double.parseDouble(minField.getText());
                     double maxThreshold = Double.parseDouble(maxField.getText());
                     farmDataService.updateSensorThresholds(sensor.sensorCode(), minThreshold, maxThreshold);
-                    
+
                     showAlert("Success", "Sensor updated successfully");
                     refreshView();
                 } catch (NumberFormatException e) {
@@ -254,8 +253,6 @@ public class SensorsController implements PageController {
                 }
             }
         });
-        
-        dialog.showAndWait();
     }
 
     private void showAlert(String title, String message) {
