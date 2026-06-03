@@ -2,12 +2,9 @@ package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import models.AlertSummary;
 import services.FarmDataService;
-import java.util.List;
 
 public class AlertsController implements PageController {
     @FXML private TableView<AlertSummary> alertsTable;
@@ -20,10 +17,12 @@ public class AlertsController implements PageController {
     @FXML private TableColumn<AlertSummary, String> messageColumn;
 
     private FarmDataService farmDataService;
+    private MainController mainController;
 
     @Override
     public void bind(FarmDataService farmDataService, MainController mainController) {
         this.farmDataService = farmDataService;
+        this.mainController = mainController;
         setupTableColumns();
     }
 
@@ -40,5 +39,21 @@ public class AlertsController implements PageController {
     @Override
     public void refreshView() {
         alertsTable.setItems(FXCollections.observableArrayList(farmDataService.getAlertsSortedBySeverity()));
+    }
+
+    @FXML
+    private void acknowledgeSelectedAlert() {
+        AlertSummary selectedAlert = alertsTable.getSelectionModel().getSelectedItem();
+        if (selectedAlert != null && farmDataService.acknowledgeAlert(selectedAlert.id())) {
+            mainController.refreshLoadedPages();
+        }
+    }
+
+    @FXML
+    private void deleteSelectedAlert() {
+        AlertSummary selectedAlert = alertsTable.getSelectionModel().getSelectedItem();
+        if (selectedAlert != null && farmDataService.deleteAlert(selectedAlert.id())) {
+            mainController.refreshLoadedPages();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.stream.Collectors;
+
 import app.UiEffects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -47,14 +49,14 @@ public class DashboardController implements PageController {
                 farmDataService.getZoneSummaries().stream()
                         .limit(3)
                         .map(this::createZoneCard)
-                        .toList()
+                .collect(Collectors.toList())
         );
 
         alertHighlightsBox.getChildren().setAll(
                 farmDataService.getAlertSummaries().stream()
                         .limit(3)
                         .map(this::createAlertCard)
-                        .toList()
+                .collect(Collectors.toList())
         );
     }
 

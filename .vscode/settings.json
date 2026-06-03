@@ -1,5 +1,13 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
+    "java.jdt.ls.java.home": "c:\\Users\\LENOVO\\.jdk\\jdk-25.0.2",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-25",
+            "path": "c:\\Users\\LENOVO\\.jdk\\jdk-25.0.2",
+            "default": true
+        }
+    ],
     "java.project.sourcePaths": [
         "src/main/java"
     ],

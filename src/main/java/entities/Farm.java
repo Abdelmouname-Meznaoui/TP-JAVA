@@ -32,6 +32,10 @@ public class Farm {
         return Collections.unmodifiableList(alerts);
     }
 
+    public boolean removeAlert(String alertId) {
+        return alerts.removeIf(alert -> alert.getId().equals(alertId));
+    }
+
     public CropZone createCropZone(String zoneName) {
         CropZone zone = new CropZone(nextCode("CZ", ++cropZoneCounter), zoneName);
         zones.add(zone);

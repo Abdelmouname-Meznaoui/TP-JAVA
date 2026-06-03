@@ -741,6 +741,10 @@ public class FarmDataService {
         return true;
     }
 
+    public boolean deleteAlert(String alertId) {
+        return farm.removeAlert(alertId);
+    }
+
     
     public List<AlertSummary> getAlertsHistory(String zoneCode, String sensorType, String severity, LocalDate startDate, LocalDate endDate) {
     List<AlertSummary> filtered = new ArrayList<>(getAlertsSortedBySeverity());
